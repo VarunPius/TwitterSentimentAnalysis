@@ -6,6 +6,7 @@ from pyspark.sql.functions import from_json, col
 import re
 import logging
 from textblob import TextBlob
+import time
 
 import findspark
 findspark.init()
@@ -28,3 +29,7 @@ if __name__ == "__main__":
         .option("subscribe", "TW_ANALYSIS")\
         .option("kafka.bootstrap.servers", "localhost:9092") \
         .load()
+    
+    while True:
+        s = df.writeStream.outputMode("append").format("console").start().awaitTermination()
+        #time.sleep(5)

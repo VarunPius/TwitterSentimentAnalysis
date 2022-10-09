@@ -422,7 +422,7 @@ if __name__ == "__main__":
         .option("kafka.bootstrap.servers", "localhost:9092") \
         .load()
 
-    # Convert df's column value tu string so we can manipulate it
+    # Convert df's column value to string so we can manipulate it
     df.selectExpr("CAST(value AS STRING)")
 
     # Schema creation for new df values

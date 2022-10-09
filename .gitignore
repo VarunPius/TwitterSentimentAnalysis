@@ -1,4 +1,9 @@
+# Exclude binaries
 /__pycache__
+
+# Exclude log files
+*.log
+
+# Exclude configuartion and Authentication files
 auth_tokens.py
 conf.md
-TW_DEBUG.log
