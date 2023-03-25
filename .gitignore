@@ -4,6 +4,7 @@ dbt_packages/
 logs/
 
 # Cred files
+twittersentimentanalysis/auth_tokens.py
 
 # Poetry Files
 poetry.lock
