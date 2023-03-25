@@ -1,0 +1,7 @@
+# DBT Directories
+target/
+dbt_packages/
+logs/
+
+# Poetry Files
+poetry.lock
