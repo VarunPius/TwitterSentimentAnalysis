@@ -3,5 +3,7 @@ target/
 dbt_packages/
 logs/
 
+# Cred files
+
 # Poetry Files
 poetry.lock
