@@ -10,12 +10,16 @@ consumer = KafkaConsumer(
     bootstrap_servers=['localhost:9092'],
     api_version=(2, 0, 2),
     # Deserialize the string from the producer since it comes in hex
-    value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+    key_deserializer=lambda x: x.decode('utf-8'),
+    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+    )
 
 # Message loader from Json
 for message in consumer:
-    tweets = json.loads(json.dumps(message.value))
-    print(tweets)
+    #tweets = json.loads(json.dumps(message.value))
+    #print(tweets)
+    print("Key: ", message.key)
+    print("Value: ", json.loads(json.dumps(message.value)))
 
 """
 Output:

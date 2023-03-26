@@ -68,15 +68,15 @@ logging.debug('This is a debug message')
 
 # Acess tokens and keys
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
-def twitterAuth():
+def twitterAuth(env):
     yaml=YAML(typ='safe')                           # default, if not specfied, is 'rt' (round-trip)
-    with open('config.yml', 'r') as file:
+    with open('../resources/config.yml', 'r') as file:
         config = yaml.load(file)
-    consumer_key = config['DeveloperKeys']['consumer_key']
-    consumer_secret = config['DeveloperKeys']['consumer_secret']
-    access_token = config['DeveloperKeys']['access_token']
-    access_secret = config['DeveloperKeys']['access_secret']
-    bearer_token = config['DeveloperKeys']['bearer_token']
+    consumer_key = config[env]['DeveloperKeys']['consumer_key']
+    consumer_secret = config[env]['DeveloperKeys']['consumer_secret']
+    access_token = config[env]['DeveloperKeys']['access_token']
+    access_secret = config[env]['DeveloperKeys']['access_secret']
+    bearer_token = config[env]['DeveloperKeys']['bearer_token']
 
     return bearer_token
 
@@ -109,8 +109,10 @@ class TweetListener(tweepy.StreamingClient):
     def on_tweet(self, tweet):
         #print("Tweet:", tweet.id, tweet.text)
         #logging.debug("Tweet ID: " + str(tweet.id) + " | Tweet:  " + tweet.text)
-        #producer.send(topic_name, value=tweet.text)
-        return tweet.text
+        tweet_key = str(tweet.id)
+        tweet_value = str(tweet.id) + " | Tweet:  " + tweet.text
+        producer.send(topic_name, key = tweet_key, value=tweet_value)
+        #return tweet.text
 
 
     def on_status(self, raw_data):
@@ -159,23 +161,33 @@ class TweetListener(tweepy.StreamingClient):
 
 # Kafka 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
-def kafka_initializer():
+def kafka_initializer(env):
     # Generate Kafka producer/ localhost and 9092 default ports
     global producer
     global topic_name
-    producer = KafkaProducer(bootstrap_servers=['localhost:9092'],
+    
+    yaml=YAML(typ='safe')                           # default, if not specfied, is 'rt' (round-trip)
+    with open('../resources/config.yml', 'r') as file:
+        config = yaml.load(file)
+    btstrp_srvr = config[env]['Kafka']['bootstrap_servers']
+
+
+    producer = KafkaProducer(bootstrap_servers= btstrp_srvr,     #['localhost:9092'],
+                            key_serializer=lambda x: x.encode('utf-8'), 
                             value_serializer=lambda x: json.dumps(x).encode('utf-8'))
 
     # Topic name for Kafka tracing
-    topic_name = 'TW_ANALYSIS'
+    topic_name = config[env]['Kafka']['topic_name']       #'TW_ANALYSIS'
+    print(btstrp_srvr, topic_name)
     return
 
 
 if __name__ == '__main__':
 #def parse_tweet():
+    env = 'Dev'
     # Twitter API usage
-    kafka_initializer()
-    bearer_token = twitterAuth()
+    kafka_initializer(env)
+    bearer_token = twitterAuth(env)
     twitter_stream = TweetListener(bearer_token)
     twitter_stream.start_streaming_tweets(search_term)
 

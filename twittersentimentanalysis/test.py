@@ -14,47 +14,57 @@ for tweet in public_tweets:
     print(tweet.text)
 
 
-client = tweepy.StreamingClient(cred.bearer_token)
 
-rules = [
-    # we add our rules here
-    tweepy.StreamRule(
-        '("black panther" OR #wakandaforever) (magnificent OR amazing OR excellent OR awesome OR great) -is:retweet',
-        tag='black panther tribute'
-    ),
-    tweepy.StreamRule(
-        '("tiktok")'
-    )
-]
-client.add_rules(rules)
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+
+import multiprocessing as mp
+import random
+import time
+
+def number_generator(queue):
+    while True:
+        queue.put(random.randint(1,100))
+        time.sleep(0.5)
+
+def another_method(queue):
+    while True:
+        data = queue.get()
+        # write data to Kafka topic
+        print(data)
+
+if __name__ == '__main__':
+    queue = mp.Queue()
+    p1 = mp.Process(target=number_generator, args=(queue,))
+    p2 = mp.Process(target=another_method, args=(queue,))
+    p1.start()
+    p2.start()
 
 
-# we list our rules
-response = client.get_rules()
 
-for rule in response.data:
-    print(rule)
+You can use a multiprocessing queue to share data between two files in Python.
+The multiprocessing.Queue class provides a way to share data between processes.
+You can create a queue object in one file and pass it to another file as an argument.
+Here’s an example of how you can use it:
 
-# we delete one or more routes by passing their id
-#client.delete_rules(['1639753517446619136'])
+from multiprocessing import Process, Queue
 
-class IDPrinter(tweepy.StreamingClient):
-    # we can get a response object
-    def on_response(self, response):
-        # It has the structure: StreamResponse(tweet, includes, errors, matching_rules)
-        # So for each tweet, we have all the matching_rules
-        print("# Response #:", response)
-    # or we can just read the tweet
-    def on_tweet(self, tweet):
-        print("# Tweet #:", tweet.id, tweet.text)
-    def on_errors(self, errors):
-        print("# Error #:", errors)
-    def on_connection_error(self):
-        # what to do in case of network error
-        self.disconnect()
-    def on_request_error(self, status_code):
-        # what to do when the HTTP response status code is >= 400
-        pass
+def writer(q):
+    q.put('hello')
 
-printer = IDPrinter(cred.bearer_token)
-printer.filter()
+def reader(q):
+    print(q.get())
+
+if __name__ == '__main__':
+    q = Queue()
+    p1 = Process(target=writer, args=(q,))
+    p2 = Process(target=reader, args=(q,))
+    p1.start()
+    p2.start()
+    p1.join()
+    p2.join()
+In this example, we create a queue object q and pass it as an argument to both the writer and reader functions.
+The writer function puts a string 'hello' into the queue using the put() method.
+The reader function reads from the queue using the get() method and prints the value.
+

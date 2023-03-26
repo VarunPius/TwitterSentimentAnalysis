@@ -1,9 +1,11 @@
+# Cache/System files
+# Python 
+__pycache__/
+# Poetry Files
+poetry.lock
+
 # Logs
 *.log
 
 # Config files
 */config.yml
-__pycache__/
-
-# Poetry Files
-poetry.lock

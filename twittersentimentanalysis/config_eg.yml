@@ -1,8 +1,0 @@
-DeveloperKeys:
-  consumer_key: "a123"
-  consumer_secret: a123
-  access_token: a123
-  access_secret: a123
-  bearer_token: a123
-
-# double quotes as well as it's absence works
