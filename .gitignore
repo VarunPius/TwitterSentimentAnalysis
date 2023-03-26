@@ -1,10 +1,9 @@
-# DBT Directories
-target/
-dbt_packages/
-logs/
+# Logs
+*.log
 
-# Cred files
-twittersentimentanalysis/auth_tokens.py
+# Config files
+*/config.yml
+__pycache__/
 
 # Poetry Files
 poetry.lock

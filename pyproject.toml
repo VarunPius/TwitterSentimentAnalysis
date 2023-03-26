@@ -9,7 +9,8 @@ readme = "README.md"
 python = "^3.11"
 findspark = "^2.0.1"
 tweepy = "^4.13.0"
-python-dotenv = "^1.0.0"
+ruamel-yaml = "^0.17.21"
+kafka-python = "^2.0.2"
 
 
 [build-system]

@@ -6,13 +6,13 @@ auth = tweepy.OAuth1UserHandler(
    cred.consumer_key, cred.consumer_secret, cred.access_token, cred.access_secret
 )
 
-'''
+
 api = tweepy.API(auth)
 
 public_tweets = api.home_timeline()
 for tweet in public_tweets:
     print(tweet.text)
-'''
+
 
 client = tweepy.StreamingClient(cred.bearer_token)
 
