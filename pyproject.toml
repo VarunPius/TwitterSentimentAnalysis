@@ -7,10 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-findspark = "^2.0.1"
 tweepy = "^4.13.0"
 ruamel-yaml = "^0.17.21"
 kafka-python = "^2.0.2"
+pyspark = "^3.3.2"
+findspark = "^2.0.1"
+textblob = "^0.17.1"
 
 
 [build-system]
