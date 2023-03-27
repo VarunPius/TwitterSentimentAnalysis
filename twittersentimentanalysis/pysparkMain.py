@@ -42,6 +42,9 @@ import findspark
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 findspark.init()
 
+
+# Logging configurations
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
 logging.basicConfig(filename='../logs/DEBUG_PySpark.log', filemode='w', encoding='UTF-8', level=logging.INFO)
 logging.basicConfig(filename='../logs/DEBUG_TweetParser.log', filemode='w', encoding='UTF-8', level=logging.DEBUG, format='%(levelname)s: %(message)s')
 logging.info('Spark Starts here:')
@@ -75,12 +78,17 @@ def parse_df(ss):
 
     df1.writeStream.outputMode("append").format("console").start().awaitTermination()
 
+# Main 
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
 
 if __name__ == "__main__":
     ss = spark_session()
     parse_df(ss)
 
 
+######################################################################################################################################################
+# Notes/Appendix
+######################################################################################################################################################
 
 
 """

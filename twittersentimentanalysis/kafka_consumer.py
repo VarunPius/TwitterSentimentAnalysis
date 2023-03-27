@@ -1,37 +1,78 @@
-# Import libraries
-from kafka import KafkaConsumer
+######################################################################################################################################################
+# Code Info                                                                                                                                          #
+#                                                                                                                                                    #
+# Kafka_consumer.py                                                                                                                                  #
+# Author(s): Varun Pius Rodrigues                                                                                                                    #
+# About: Reads tweets from Kafka topic; this is a placeholder to process kafka data while Spark implementation was incomplete;                       #
+#        Use this to read from Kafka and check it Kafka topic is working or if Spark part is not complete.                                           #
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+#                                                                                                                                                    #
+# Change Log:                                                                                                                                        #
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+# Issue ID | Changed By                 | Resolution Date | Resolution                                                                               #
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+#                                                                                                                                                    #
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+# Library Imports goes here
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+
+# System Libraries
 import json
 
-topic_name = 'TW_ANALYSIS'
+# External librabries
+from ruamel.yaml import YAML
+from kafka import KafkaConsumer
 
-# Creata Kafka consumer, same default configuration frome the producer
-consumer = KafkaConsumer(
-    topic_name,
-    bootstrap_servers=['localhost:9092'],
-    api_version=(2, 0, 2),
-    # Deserialize the string from the producer since it comes in hex
-    key_deserializer=lambda x: x.decode('utf-8'),
-    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
-    )
 
-# Message loader from Json
-for message in consumer:
-    #tweets = json.loads(json.dumps(message.value))
-    #print(tweets)
-    print("Key: ", message.key)
-    print("Value: ", json.loads(json.dumps(message.value)))
+######################################################################################################################################################
+# Code starts here
+######################################################################################################################################################
 
-"""
-Output:
-{
-    'data': {
-        'edit_history_tweet_ids': ['1578953465573019648'], 
-        'id': '1578953465573019648', 
-        'text': '2022-10-09 03:40:16.270832 tweepy'
-    }, 
-    'matching_rules': [
-        {'id': '1578934793513099266', 'tag': ''}
-    ]
-}
-https://api.twitter.com/2/tweets/1578934793513099266
-"""
+# Kafka Consumer
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+def kafka_initializer(env):
+    yaml=YAML(typ='safe')                                       # default, if not specfied, is 'rt' (round-trip)
+    with open('../resources/config.yml', 'r') as file:
+        config = yaml.load(file)
+
+    btstrp_srvr = config[env]['Kafka']['bootstrap_servers']
+
+    # Topic name for Kafka tracing
+    topic_name = config[env]['Kafka']['topic_name']             #'TW_ANALYSIS'
+    
+    print(btstrp_srvr, topic_name)
+    
+    # Kafka Consumer
+    consumer = KafkaConsumer(topics = topic_name, bootstrap_servers=btstrp_srvr,      #['localhost:9092'],   # $Appx1
+                            # Deserialize the string from the producer since it comes in hex
+                            key_deserializer=lambda x: x.decode('utf-8'),
+                            value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+                        )
+                                                                            
+    return consumer
+
+
+# Main 
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+if __name__ == '__main__':
+    env = 'Dev'
+    consumer = kafka_initializer(env)
+
+    for message in consumer:
+        print("Key: ", message.key)
+        print("Value: ", json.loads(json.dumps(message.value)))
+
+
+######################################################################################################################################################
+# Notes/Appendix
+######################################################################################################################################################
+
+# Appx1 
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
+'''
+kafkaConsumer takes positional arguments before keyword arguments; 
+meaning topics names `*topics` should be placed first, before specifying other arguments using the keyword (key-value pairs using `=`)
+'''

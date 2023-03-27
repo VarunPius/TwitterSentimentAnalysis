@@ -38,9 +38,10 @@ from kafka import KafkaProducer     # //TODO: Check if needed
 # Twitter filter rules 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Search name for twitter
-search_term = '("TikTok")'
+search_term = '("tiktok")'
 
 # Alternate way to declare rules
+# the rules are <space> = AND; `OR` is OR operator; and `-`is NOT operator
 rules = [
     # we add our rules here
     tweepy.StreamRule(
@@ -49,7 +50,8 @@ rules = [
     ),
     tweepy.StreamRule(
         '("tiktok")'
-    )
+    ),
+    tweepy.StreamRule('("python" OR #programming) (-is:retweet -is:reply)')   # the second part basically means no retweet and no replies
 ]
 
 
@@ -98,7 +100,7 @@ def twitterAuth_old():
 """
 
 
-# Logging configurations
+# Tweet Listener
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 class TweetListener(tweepy.StreamingClient):
 
@@ -149,12 +151,12 @@ class TweetListener(tweepy.StreamingClient):
         # Start catching tweets from twitter, delete '[' and ']' for general search
         # If  using `rules` from configuration, uncomment the following line to add list of rules:
         #self.add_rules(rules)
-        self.add_rules(tweepy.StreamRule(search_term))
+        #self.add_rules(tweepy.StreamRule(search_term))
         
         # List of current rules for the API:
-        #print(self.get_rules())
+        print(self.get_rules())
         # Delete rules from list of current rules for API
-        #self.delete_rules([1584762707890573312])
+        #self.delete_rules([1639754720465264641])
 
         # Filter tweets as per the rules
         self.filter()
@@ -186,6 +188,8 @@ def kafka_initializer(env):
     return
 
 
+# Main 
+# -------------------------------------------------------------------------------------------------------------------------------------------------- #
 if __name__ == '__main__':
 #def parse_tweet():
     env = 'Dev'
@@ -197,6 +201,6 @@ if __name__ == '__main__':
 
 
 ######################################################################################################################################################
-# Notes
+# Notes/Appendix
 ######################################################################################################################################################
 
