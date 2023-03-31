@@ -10,11 +10,11 @@
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 # Issue ID | Changed By                 | Resolution Date | Resolution                                                                               #
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
-# ARCH-001   Varun Pius Rodrigues         2023-03-25        Added new method `on_response` to fix tweet structure error                              #
-# ARCH-002   Varun Pius Rodrigues         2023-03-26        Kafka Key Inclusion in write to topic                                                    #
-# INFR-004   Varun Pius Rodrigues         2023-03-26        Move configs from `auth.py` to `config.yml` file                                         #
-# INFR-005   Varun Pius Rodrigues         2023-03-26        Move configs to the `resources` directory                                                #
-# INFR-006   Varun Pius Rodrigues         2023-03-26        Include section for environment selection in code and configs                            #
+# ARCH-001 | Varun Pius Rodrigues       | 2023-03-25      | Added new method `on_response` to fix tweet structure error                              #
+# ARCH-002 | Varun Pius Rodrigues       | 2023-03-26      | Kafka Key Inclusion in write to topic                                                    #
+# INFR-004 | Varun Pius Rodrigues       | 2023-03-26      | Move configs from `auth.py` to `config.yml` file                                         #
+# INFR-005 | Varun Pius Rodrigues       | 2023-03-26      | Move configs to the `resources` directory                                                #
+# INFR-006 | Varun Pius Rodrigues       | 2023-03-26      | Include section for environment selection in code and configs                            #
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 
 

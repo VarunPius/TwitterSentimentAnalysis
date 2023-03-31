@@ -73,7 +73,8 @@ def parse_df(ss):
         .option("subscribe", "TW_ANALYSIS")\
         .option("kafka.bootstrap.servers", "localhost:9092") \
         .load()
-    
+        # .option("kafka.bootstrap.servers", "host1:port1,host2:port2") when multiple kafka hosts
+
     df1 = df.selectExpr("CAST(value AS STRING)")            # Refer &1
 
     df1.writeStream.outputMode("append").format("console").start().awaitTermination()
