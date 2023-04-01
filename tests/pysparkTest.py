@@ -48,7 +48,7 @@ def pre_process(text):
 
 if __name__ == "__main__":
     # Create logging file
-    logging.basicConfig(filename='spark_tw.log', encoding='UTF-8', level=logging.INFO)
+    logging.basicConfig(filename='../logs/DEBUG_PySpark.log', encoding='UTF-8', level=logging.INFO)
 
     # Spark object creation
     spark = SparkSession\

@@ -46,7 +46,6 @@ findspark.init()
 # Logging configurations
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 logging.basicConfig(filename='../logs/DEBUG_PySpark.log', filemode='w', encoding='UTF-8', level=logging.INFO)
-logging.basicConfig(filename='../logs/DEBUG_TweetParser.log', filemode='w', encoding='UTF-8', level=logging.DEBUG, format='%(levelname)s: %(message)s')
 logging.info('Spark Starts here:')
 
 

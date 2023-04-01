@@ -57,7 +57,7 @@ rules = [
 
 # Logging configurations
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
-logging.basicConfig(filename='../logs/TW_DEBUG.log', filemode='w', encoding='UTF-8', level=logging.DEBUG, format='%(levelname)s: %(message)s')
+logging.basicConfig(filename='../logs/DEBUG_TweetParser.log', filemode='w', encoding='UTF-8', level=logging.DEBUG, format='%(levelname)s: %(message)s')
 logging.debug('This is a debug message')
 
 # These are the various other logging levels available
