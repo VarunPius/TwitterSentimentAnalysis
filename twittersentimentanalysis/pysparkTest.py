@@ -2,7 +2,7 @@
 from pyspark.sql import functions as F
 from pyspark.sql.types import StringType, StructType, StructField, FloatType
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col
+from pyspark.sql.functions import from_json, col, udf
 import re
 import logging
 from textblob import TextBlob
@@ -10,6 +10,41 @@ import time
 
 import findspark
 findspark.init()
+
+
+def testUdf(text):
+    return "Ace"
+
+def pre_process(text):
+    text = text.split(' | Tweet: ')[1]
+    # Remove links
+    text = re.sub('http://\S+|https://\S+', '', text)
+    text = re.sub('http[s]?://\S+', '', text)
+    text = re.sub(r"http\S+", "", text)
+
+    # Convert HTML references
+    text = re.sub('&amp', 'and', text)
+    text = re.sub('&lt', '<', text)
+    text = re.sub('&gt', '>', text)
+    #text = re.sub(r'\xao', ' ', text)
+
+    # Remove new line characters
+    text = re.sub('[\r\n]+', ' ', text)
+    
+    # Remove mentions
+    text = re.sub(r'@\w+', '', text)
+    
+    # Remove hashtags
+    text = re.sub(r'#\w+', '', text)
+
+    # Remove multiple space characters
+    text = re.sub('\s+',' ', text)
+    
+    # Convert to lowercase
+    text = text.lower()
+    print("Debug:", text)
+    return text
+
 
 if __name__ == "__main__":
     # Create logging file
@@ -31,8 +66,14 @@ if __name__ == "__main__":
         .load()
     
     df1 = df.selectExpr("CAST(value AS STRING)")            # Refer &1
+    
+    #df1 = df1.withColumn('processed_tweet', col('value'))
 
-    df1.writeStream.outputMode("append").format("console").start().awaitTermination()
+    convertUDF = udf(lambda z: pre_process(z), StringType())
+
+    df2 = df1.select(convertUDF(col("value")).alias("processed_tweet") )
+
+    df2.writeStream.outputMode("append").format("console").option("truncate", "false").start().awaitTermination()
 
 
 """

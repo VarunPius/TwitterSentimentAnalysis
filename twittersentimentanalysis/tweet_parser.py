@@ -116,7 +116,7 @@ class TweetListener(tweepy.StreamingClient):
         #print("Tweet:", tweet.id, tweet.text)
         #logging.debug("Tweet ID: " + str(tweet.id) + " | Tweet:  " + tweet.text)
         tweet_key = str(tweet.id)
-        tweet_value = str(tweet.id) + " | Tweet:  " + tweet.text
+        tweet_value = str(tweet.id) + " | Tweet: " + tweet.text
         producer.send(topic_name, key = tweet_key, value=tweet_value)
         #return tweet.text
 
