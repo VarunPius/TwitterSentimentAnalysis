@@ -12,9 +12,6 @@ import findspark
 findspark.init()
 
 
-def testUdf(text):
-    return "Ace"
-
 def pre_process(text):
     text = text.split(' | Tweet: ')[1]
     # Remove links
@@ -26,7 +23,7 @@ def pre_process(text):
     text = re.sub('&amp', 'and', text)
     text = re.sub('&lt', '<', text)
     text = re.sub('&gt', '>', text)
-    #text = re.sub(r'\xao', ' ', text)
+    text = re.sub('\xa0', ' ', text)
 
     # Remove new line characters
     text = re.sub('[\r\n]+', ' ', text)
@@ -42,13 +39,15 @@ def pre_process(text):
     
     # Convert to lowercase
     text = text.lower()
+    logging.info("Debug: " + text)
     print("Debug:", text)
     return text
 
 
 if __name__ == "__main__":
     # Create logging file
-    logging.basicConfig(filename='../logs/DEBUG_PySpark.log', encoding='UTF-8', level=logging.INFO)
+    logging.basicConfig(filename='../logs/DEBUG_PySpark.log', filemode='w', encoding='UTF-8', level=logging.INFO)
+    logging.info("-- PySpark Started!!  --")
 
     # Spark object creation
     spark = SparkSession\
@@ -65,15 +64,13 @@ if __name__ == "__main__":
         .option("kafka.bootstrap.servers", "localhost:9092") \
         .load()
     
-    df1 = df.selectExpr("CAST(value AS STRING)")            # Refer &1
-    
+    df1 = df.selectExpr("CAST(value AS STRING)")            # Refer &1    
     #df1 = df1.withColumn('processed_tweet', col('value'))
 
     convertUDF = udf(lambda z: pre_process(z), StringType())
-
     df2 = df1.select(convertUDF(col("value")).alias("processed_tweet") )
-
     df2.writeStream.outputMode("append").format("console").option("truncate", "false").start().awaitTermination()
+
 
 
 """
@@ -110,3 +107,11 @@ This is why we we cast as String to get:
 |{"Hello": "World"}|
 +------------------+
 """
+
+###
+'''
+https://towardsdatascience.com/sentiment-analysis-on-streaming-twitter-data-using-spark-structured-streaming-python-fc873684bfe3
+https://medium.com/analytics-vidhya/congressional-tweets-using-sentiment-analysis-to-cluster-members-of-congress-in-pyspark-10afa4d1556e
+
+
+'''
